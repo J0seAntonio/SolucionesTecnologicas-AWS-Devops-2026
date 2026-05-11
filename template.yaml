@@ -1,0 +1,30 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: Despliegue de EC2 y S3 para Soluciones Tecnológicas del Futuro
+
+Resources:
+  # 1. Instancia EC2
+  MiInstanciaProyecto:
+    Type: 'AWS::EC2::Instance'
+    Properties:
+      InstanceType: t2.micro
+      ImageId: ami-04b70fa74e45c3917 # Amazon Linux 2023 en us-east-1
+      IamInstanceProfile: LabInstanceProfile
+      Tags:
+        - Key: Name
+          Value: Servidor-DevOps-CFN
+
+  # 2. Bucket S3 con nombre dinámico (AccountId)
+  MiBucketProyecto:
+    Type: 'AWS::S3::Bucket'
+    Properties:
+      BucketName: !Sub 'devops-bucket-${AWS::AccountId}'
+      VersioningConfiguration:
+        Status: Enabled
+
+Outputs:
+  InstanciaID:
+    Description: ID de la instancia creada
+    Value: !Ref MiInstanciaProyecto
+  NombreBucket:
+    Description: Nombre del bucket creado
+    Value: !Ref MiBucketProyecto
